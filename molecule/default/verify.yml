@@ -7,6 +7,7 @@
       ansible.builtin.command: smbclient //sambaserver/Data --user=%
       delegate_to: localhost
       failed_when: false
+      changed_when: false
       register: smbclient_guest_connect
 
     - name: Assert guest cannot access the share
@@ -22,6 +23,7 @@
           --password=sambapassword
       delegate_to: localhost
       failed_when: false
+      changed_when: false
       register: smbclient_connect
 
     - name: Assert user is able to connect to the share
@@ -37,6 +39,7 @@
           --command="mkdir test"
       delegate_to: localhost
       failed_when: false
+      changed_when: false
       register: smbclient_write
 
     - name: Assert the share is writable by registered user
