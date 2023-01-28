@@ -1,0 +1,13 @@
+galaxy_info:
+  author: Egidio Docile
+  role_name: samba
+  namespace: egdoc
+  description: Ansible role to install and configure Samba on Linux
+  license: license GPLv2
+  min_ansible_version: 2.1
+  galaxy_tags:
+    - samba
+    - linux
+    - debian
+
+dependencies: []

@@ -1,0 +1,37 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name: '{{ samba_packages }}'
+    update_cache: true
+
+- name: Ensure users are in the samba database
+  ansible.builtin.shell: >
+    set -o pipefail -o nounset -o errexit &&
+    (echo {{ item.password|quote }}; echo {{ item.password|quote }}) | smbpasswd -s -a {{ item.name|quote }}
+  args:
+    executable: /bin/bash
+  no_log: true
+  register: output
+  changed_when: '"Added user" in output.stdout'
+  loop: '{{ samba_users }}'
+
+- name: Ensure shared directories exists
+  ansible.builtin.file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: '{{ item.shared_dir_owner | default(omit) }}'
+    group: '{{ item.shared_dir_group | default(omit) }}'
+    mode: '{{ item.shared_dir_mode | default(omit) }}'
+  loop: '{{ samba_shares }}'
+
+- name: Ensure samba share configuration exists
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+    validate: /usr/bin/testparm -s -f %s
+  notify:
+    - Ensure services are started and enabled

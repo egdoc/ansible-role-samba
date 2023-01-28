@@ -1,0 +1,15 @@
+---
+samba_users: []
+# samba_users:
+#   - name: sambauser
+#     password: sambapassword
+samba_shares: []
+# samba_shares:
+#   - name: Data
+#     comment: Shared files
+#     path: /srv/samba/data
+#     writable: false
+#     guest_ok: false
+#     shared_dir_owner: root
+#     shared_dir_group: root
+#     shared_dir_mode: '755'

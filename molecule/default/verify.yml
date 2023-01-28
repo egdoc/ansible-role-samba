@@ -1,0 +1,44 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Access the share as guest
+      ansible.builtin.command: smbclient //sambaserver/Data --user=%
+      delegate_to: localhost
+      failed_when: false
+      register: smbclient_guest_connect
+
+    - name: Assert guest cannot access the share
+      ansible.builtin.assert:
+        that: smbclient_guest_connect.rc != 0
+      delegate_to: localhost
+
+    - name: Access the share as registered user
+      ansible.builtin.command:
+        cmd: >
+          smbclient //sambaserver/Data
+          --user=sambauser
+          --password=sambapassword
+      delegate_to: localhost
+      failed_when: false
+      register: smbclient_connect
+
+    - name: Assert user is able to connect to the share
+      ansible.builtin.assert:
+        that: smbclient_connect.rc == 0
+
+    - name: Write in the shared directory as registered user
+      ansible.builtin.command:
+        cmd: >
+          smbclient //sambaserver/Data
+          --user=sambauser
+          --password=sambapassword
+          --command="mkdir test"
+      delegate_to: localhost
+      failed_when: false
+      register: smbclient_write
+
+    - name: Assert the share is writable by registered user
+      ansible.builtin.assert:
+        that: smbclient_write.rc == 0

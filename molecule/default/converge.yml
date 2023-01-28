@@ -1,0 +1,23 @@
+---
+- name: Converge
+  hosts: all
+  pre_tasks:
+    - name: Ensure Unix user exists
+      ansible.builtin.user:
+        name: sambauser
+        create_home: false
+        shell: /usr/sbin/nologin
+
+  roles:
+    - role: egdoc.samba
+      samba_users:
+        - name: sambauser
+          password: sambapassword
+      samba_shares:
+        - name: Data
+          path: /srv/samba/data
+          writable: true
+          guest_ok: false
+          shared_dir_owner: sambauser
+          shared_dir_group: sambauser
+          shared_dir_mode: '755'

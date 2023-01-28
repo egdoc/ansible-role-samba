@@ -1,0 +1,6 @@
+---
+samba_packages:
+  - samba
+samba_services:
+  - smbd
+  - nmbd
