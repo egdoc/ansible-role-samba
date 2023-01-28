@@ -4,7 +4,12 @@ galaxy_info:
   namespace: egdoc
   description: Ansible role to install and configure Samba on Linux
   license: license GPLv2
-  min_ansible_version: 2.1
+  min_ansible_version: '2.1'
+  platforms:
+    - name: Debian
+      version:
+        - Buster
+        - Bullseye
   galaxy_tags:
     - samba
     - linux
